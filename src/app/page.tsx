@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function Valentine() {
@@ -7,15 +7,6 @@ export default function Valentine() {
   const [yesPressed, setYesPressed] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [adventureScene, setAdventureScene] = useState(0);
-
-  useEffect(() => {
-    if (yesPressed) {
-      const interval = setInterval(() => {
-        setAdventureScene((prev) => (prev + 1) % adventureBackgrounds.length);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [yesPressed]);
 
   const handleNoClick = () => {
     setNoCount((prev) => prev + 1);
@@ -25,18 +16,41 @@ export default function Valentine() {
     });
   };
 
-  const adventureBackgrounds = [
-    "bg-gradient-to-r from-blue-400 to-cyan-300", // Beach
-    "bg-gradient-to-r from-green-500 to-emerald-700", // Mountain
-    "bg-gradient-to-r from-orange-400 to-amber-500", // Sunset
-    "bg-gradient-to-r from-indigo-500 to-purple-600", // Night Sky
+  // Enhanced background options - mix of gradients and image URLs
+  const backgroundOptions = [
+
+    // Image backgrounds - using placeholder URLs that you can replace
+    { type: "image", value: "https://images.unsplash.com/photo-1518495973542-4542c06a5843", name: "Beach Sunset" },
+    { type: "image", value: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d", name: "Lavender Fields" },
+    { type: "image", value: "https://images.unsplash.com/photo-1534447677768-be436bb09401", name: "Cherry Blossoms" },
+    { type: "image", value: "https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8", name: "Starry Sky" },
+    { type: "image", value: "https://images.unsplash.com/photo-1476611317561-60117649dd94", name: "Autumn Park" },
+    { type: "image", value: "https://images.unsplash.com/photo-1501785888041-af3ef285b470", name: "Mountain Lake" },
+    { type: "image", value: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071", name: "Aurora Lights" },
+    { type: "image", value: "https://images.unsplash.com/photo-1530053969600-caed2596d242", name: "Tropical Beach" },
+    { type: "image", value: "https://images.unsplash.com/photo-1613336026275-d6d473084e85", name: "Romantic Dinner" },
+    { type: "image", value: "https://images.unsplash.com/photo-1551907234-fb773fb08a1b", name: "City Lights" },
+  ];
+
+  // Date ideas to cycle through
+  const dateIdeas = [
+    "I'll pick you up, we grab dark chocolate & debate pizza toppings! 🍕🍫",
+    "Sunset picnic with your favorite treats and stargazing afterward! 🌅✨",
+    "Cooking challenge: you make salad, I'll make dessert! 🥗🍰",
+    "Surprise road trip to a chocolate factory! 🚗🍫",
+    "Movie night with all your favorite snacks! 🎬🍿",
+    "Beach day with ice cream and walks by the water! 🏖️🍦",
+    "Farmers market morning and cooking what we find! 🥕🍳",
+    "Hiking adventure followed by a picnic! 🥾🧺",
+    "Dancing under the stars with chocolate-covered strawberries! 💃🍓",
+    "Art gallery visit followed by dessert tasting! 🖼️🍮"
   ];
 
   const phrases = [
     "No",
     "Are you sure? 🥺",
     "I promise to pick you up every day! 🚗",
-    "But… I’ll bring you dark chocolate! 🍫",
+    "But… I'll bring you dark chocolate! 🍫",
     "Okay, but who else will eat my pizza crust? 🍕",
     "Think of all the salads I'll pretend to like! 🥗",
     "I'll be your personal driver! 🚗💖",
@@ -50,13 +64,37 @@ export default function Valentine() {
     "Last chance! I'll watch a cooking show with you! 👨‍🍳"
   ];
 
+  // Get current background styles
+  const getCurrentBackground = () => {
+    const current = backgroundOptions[adventureScene];
+    if (current.type === "gradient") {
+      return current.value;
+    } else {
+      return `bg-cover bg-center bg-no-repeat`;
+    }
+  };
+
+  // Get current background image if applicable
+  const getCurrentBackgroundImage = () => {
+    const current = backgroundOptions[adventureScene];
+    if (current.type === "image") {
+      return { backgroundImage: `url(${current.value})` };
+    }
+    return {};
+  };
+
+  // Get current date idea
+  const getCurrentDateIdea = () => {
+    return dateIdeas[adventureScene % dateIdeas.length];
+  };
+
   return (
     <div
-      className={`flex flex-col items-center justify-center h-screen transition-all duration-1000 ${yesPressed ? adventureBackgrounds[adventureScene] : "bg-pink-100"
-        }`}
+      className={`flex flex-col items-center justify-center h-screen transition-all duration-1000 ${yesPressed ? getCurrentBackground() : "bg-pink-100"}`}
+      style={yesPressed ? getCurrentBackgroundImage() : {}}
     >
       {yesPressed ? (
-        <div className="text-center p-8 bg-white bg-opacity-80 rounded-xl backdrop-blur-sm max-w-md">
+        <div className="text-center p-8 bg-transparent bg-opacity-80 rounded-xl backdrop-blur-sm max-w-md">
           <motion.h1
             className="text-4xl font-bold mb-4 text-pink-600"
             initial={{ y: -50, opacity: 0 }}
@@ -67,24 +105,21 @@ export default function Valentine() {
           </motion.h1>
 
           <motion.p
-            className="text-xl mb-6 text-pink-600"
+            className="text-xl mb-6 font-bold text-green-500"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
           >
-            Our first date idea:{" "}
-            <span className="font-bold text-green-500">
-              I'll pick you up, we grab dark chocolate & debate pizza toppings! 🍕🍫
-            </span>
+            {getCurrentDateIdea()}
           </motion.p>
 
           <motion.button
             className="mt-6 bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg font-bold transition-all"
-            onClick={() => setAdventureScene((prev) => (prev + 1) % adventureBackgrounds.length)}
+            onClick={() => setAdventureScene((prev) => (prev + 1) % backgroundOptions.length)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            More date ideas? Click me! 💕
+            Click me Plsssssss 💕
           </motion.button>
         </div>
       ) : (
@@ -120,16 +155,16 @@ export default function Valentine() {
 
           <div className="flex items-center justify-center gap-4 mt-10">
             <motion.button
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg text-xl font-bold transition-all"
+              className="w-48 h-20 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-lg text-xl font-bold transition-all"
               onClick={() => setYesPressed(true)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              Yes! But I get extra chocolate 🍫😜
+              Yes! But I get extra Dark chocolate and Roses 🍫😜
             </motion.button>
 
             <motion.button
-              className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-lg text-xl font-bold transition-all"
+              className="w-48 h-16 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-lg text-xl font-bold transition-all"
               onClick={handleNoClick}
               animate={{ x: position.x, y: position.y }}
               transition={{ type: "spring", stiffness: 200, damping: 10 }}
@@ -139,6 +174,7 @@ export default function Valentine() {
             </motion.button>
           </div>
 
+
           {noCount > 0 && (
             <motion.p
               className="mt-12 text-sm text-gray-500"
@@ -146,7 +182,7 @@ export default function Valentine() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
-              The "No" button is running away… just like I will when you make me eat kale. 🥗😂
+              The &quot;No&quot; button is running away… just like I will when you make me eat kale. 🥗😂
             </motion.p>
           )}
         </div>
