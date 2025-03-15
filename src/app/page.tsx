@@ -99,7 +99,7 @@ export default function Valentine() {
         <div className="text-center p-8 bg-white rounded-xl shadow-xl max-w-md">
           <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
             <h1 className="text-5xl font-bold mb-4 text-pink-600">Hey Prakruti! 💕</h1>
-            <h3 className="text-4xl font-bold mb-2 text-pink-600">Will you be my Valentine? 😏💖</h3>
+            <h3 className="text-4xl font-bold mb-2 text-pink-600">Be Mine or If you say no 😏💖, I'll just keep trying until you say yes. 😘 </h3>
             <p className="text-xl mb-8 text-gray-700">
               I promise chocolate surprises, cozy road trips, and maybe… even trying kale for you. 😉
             </p>
