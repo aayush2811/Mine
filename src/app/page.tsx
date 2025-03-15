@@ -7,7 +7,7 @@ export default function Valentine() {
   const [yesPressed, setYesPressed] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [adventureScene, setAdventureScene] = useState(0);
-  const [floatingHearts, setFloatingHearts] = useState([]);
+  const [floatingHearts, setFloatingHearts] = useState<{ id: number; left: string; top: string }[]>([]);
 
   useEffect(() => {
     setFloatingHearts(
